@@ -1,194 +1,181 @@
-## Plan: move **Leeloo v2.1 (nice!nano v2 halves)** to a **XIAO BLE USB dongle (central)**
+# Leeloo Dongle Setup Plan
 
-### What changes conceptually
+Reference:
+https://zmk.dev/docs/development/hardware-integration/dongle?studio-ready=studio
 
-- The **XIAO BLE dongle becomes the split "central"** (it runs the keymap and talks to the host over USB/BLE).[^1]
-- Both Leeloo halves become **split "peripherals"** (they scan keys and send events to the central).[^1]
-- You must set the central's peripheral count so **both halves can connect** (usually `2`).[^3][^6]
-- The keyboard is effectively **dependent on the dongle** in this mode (if the dongle isn't present, it won't work).[^3]
+## Overview
 
----
+Convert the split Leeloo keyboard to use a XIAO BLE dongle as the central device. This makes both keyboard halves peripherals that connect to the dongle, which then connects to your computer via USB.
 
-## 1) Add one new config file for peripheral halves
+## Step 1: Create Dongle Shield Files
 
-Create `config/peripheral.conf` in the config folder (next to `leeloo.conf`):
+Create directory: `boards/shields/leeloo_dongle/`
 
-```ini
-# Both halves are peripherals in dongle mode
-CONFIG_ZMK_SPLIT=y
-CONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+### `Kconfig.shield`
 
-# Show a split-peripheral connection icon on nice!view (peripheral-only widget)
-CONFIG_ZMK_WIDGET_PERIPHERAL_STATUS=y
 ```
-
-The peripheral status widget is specifically meant to show split peripheral connection state and only applies on peripherals (`!ZMK_SPLIT_ROLE_CENTRAL`).[^4] This will help you see when each half is connected to the dongle.
-
----
-
-## 2) Add a "dongle shield" for the XIAO BLE central
-
-Add this tree to your repo:
-
-```text
-boards/
-  shields/
-    leeloo_dongle/
-      Kconfig.shield
-      leeloo_dongle.conf
-      leeloo_dongle.overlay
-```
-
-Use these contents:
-
-**`boards/shields/leeloo_dongle/Kconfig.shield`**
-
-```kconfig
 config SHIELD_LEELOO_DONGLE
   def_bool $(shields_list_contains,leeloo_dongle)
 ```
 
-**`boards/shields/leeloo_dongle/leeloo_dongle.conf`**
+### `Kconfig.defconfig`
 
-```ini
-# Dongle is the central
-CONFIG_ZMK_SPLIT=y
-CONFIG_ZMK_SPLIT_ROLE_CENTRAL=y
+```
+if SHIELD_LEELOO_DONGLE
 
-# Must match number of peripherals (left + right halves = 2)
-CONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS=2
+config ZMK_KEYBOARD_NAME
+  default "Leeloo Dongle"
 
-# Set keyboard name (simpler than using Kconfig.defconfig)
-CONFIG_ZMK_KEYBOARD_NAME="Leeloo Dongle"
+config ZMK_SPLIT_ROLE_CENTRAL
+  default y
+
+config ZMK_SPLIT
+  default y
+
+# Set to 2 for left + right halves
+config ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS
+  default 2
+
+# Set to peripherals (2) + BT profiles (5) + buffer (1)
+config BT_MAX_CONN
+  default 8
+
+config BT_MAX_PAIRED
+  default 8
+
+endif
 ```
 
-That peripheral count setting is required for dongle mode so the central can connect to both halves.[^3][^6]
+### `leeloo_dongle.overlay`
 
-**`boards/shields/leeloo_dongle/leeloo_dongle.overlay`** (no key scanning on dongle)
+```
+#include <dt-bindings/zmk/matrix_transform.h>
 
-```dts
 / {
-  chosen { zmk,kscan = &kscan0; };
+  chosen {
+    zmk,kscan = &mock_kscan;
+    zmk,physical-layout = &physical_layout0;
+  };
 
-  kscan0: kscan0 {
-    compatible = "zmk,kscan-noop";
+  mock_kscan: mock_kscan_0 {
+    compatible = "zmk,kscan-mock";
+    columns = <0>;
+    rows = <0>;
+    events = <0>;
+  };
+
+  default_transform: keymap_transform_0 {
+    compatible = "zmk,matrix-transform";
+    columns = <12>;
+    rows = <5>;
+    // | SW1  | SW2  | SW3  | SW4  | SW5  | SW6  |                 | SW6  | SW5  | SW4  | SW3  | SW2  | SW1  |
+    // | SW7  | SW8  | SW9  | SW10 | SW11 | SW12 |                 | SW12 | SW11 | SW10 | SW9  | SW8  | SW7  |
+    // | SW13 | SW14 | SW15 | SW16 | SW17 | SW18 |                 | SW18 | SW17 | SW16 | SW15 | SW14 | SW13 |
+    // | SW19 | SW20 | SW21 | SW22 | SW23 | SW24 | SW29 |   | SW29 | SW24 | SW23 | SW22 | SW21 | SW20 | SW19 |
+    //                      | SW25 | SW26 | SW27 | SW28 |   | SW28 | SW27 | SW26 | SW25 |
+    map = <
+    RC(0,0) RC(0,1) RC(0,2) RC(0,3) RC(0,4) RC(0,5)                 RC(0,6) RC(0,7) RC(0,8) RC(0,9) RC(0,10) RC(0,11)
+    RC(1,0) RC(1,1) RC(1,2) RC(1,3) RC(1,4) RC(1,5)                 RC(1,6) RC(1,7) RC(1,8) RC(1,9) RC(1,10) RC(1,11)
+    RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)                 RC(2,6) RC(2,7) RC(2,8) RC(2,9) RC(2,10) RC(2,11)
+    RC(3,0) RC(3,1) RC(3,2) RC(3,3) RC(3,4) RC(3,5) RC(4,5) RC(4,6) RC(3,6) RC(3,7) RC(3,8) RC(3,9) RC(3,10) RC(3,11)
+                            RC(4,1) RC(4,2) RC(4,3) RC(4,4) RC(4,7) RC(4,8) RC(4,9) RC(4,10)
+    >;
+  };
+
+  physical_layout0: physical_layout_0 {
+    compatible = "zmk,physical-layout";
+    display-name = "Default Layout";
+    transform = <&default_transform>;
   };
 };
 ```
 
-**Note**: ZMK automatically finds and uses your existing `config/leeloo.keymap` file - no need to explicitly reference it in the overlay.
+Matrix transform copied from official ZMK leeloo_common.dtsi.
 
----
+## Step 2: Update build.yaml
 
-## 3) Update build.yaml for automatic GitHub Actions builds
-
-Update your `build.yaml` to include all firmware builds:
+Replace your current `build.yaml` content with:
 
 ```yaml
-# This file generates the GitHub Actions matrix
 include:
-   - board: nice_nano_v2
-     shield: leeloo_rev2_left
-   - board: nice_nano_v2
-     shield: leeloo_rev2_right
+   # Dongle (central)
    - board: xiao_ble
      shield: leeloo_dongle
+
+   # Left half (peripheral)
+   - board: nice_nano_v2
+     shield: leeloo_rev2_left
+     cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+
+   # Right half (peripheral)
+   - board: nice_nano_v2
+     shield: leeloo_rev2_right
+     cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+
+   # Settings reset firmwares
    - board: nice_nano_v2
      shield: settings_reset
    - board: xiao_ble
      shield: settings_reset
 ```
 
-This will automatically build:
+---
 
-- Left half peripheral firmware
-- Right half peripheral firmware
-- XIAO BLE dongle central firmware
-- Settings reset firmware for both board types (for troubleshooting)
+## Step 3: Flash Firmware
+
+⚠️ **IMPORTANT:** Flash settings reset on all devices first!
+
+### 3a. Settings Reset (Do This First)
+
+For each device:
+
+1. **Enter bootloader**: Double-tap reset button
+   - nice!nano v2 → appears as `NICENANO` drive
+   - XIAO BLE → appears as `XIAO-SENSE` drive
+2. **Flash**: Drag `settings_reset-<board>-zmk.uf2` to the drive
+3. **Wait**: Drive disappears, device reboots
+
+### 3b. Flash New Firmware
+
+**Left half:** Double-tap reset → drag `leeloo_rev2_left-nice_nano_v2-zmk.uf2` to `NICENANO` left.
+
+**Right half:** Double-tap reset → drag `leeloo_rev2_right-nice_nano_v2-zmk.uf2` to `NICENANO` right.
+
+**Dongle:** Double-tap reset → drag `leeloo_dongle-xiao_ble-zmk.uf2` to `XIAO-SENSE`
+
+### 3c. Test Connection
+
+Connect dongle to computer. Should auto-pair with both halves and allow typing.
+
+**If pairing fails:** Repeat settings reset on all devices.
 
 ---
 
-## 4) Build 3 firmwares (left, right, dongle)
+## Step 4: Manual Build Commands (If Needed)
 
-### Left half (nice!nano v2 peripheral)
+### Settings Reset
 
-```sh
-west build -d build/left -p -b nice_nano_v2 -- \
-  -DSHIELD=leeloo_rev2_left \
-  -DEXTRA_CONF_FILE=../config/peripheral.conf
-```
-
-### Right half (nice!nano v2 peripheral)
-
-```sh
-west build -d build/right -p -b nice_nano_v2 -- \
-  -DSHIELD=leeloo_rev2_right \
-  -DEXTRA_CONF_FILE=../config/peripheral.conf
-```
-
-### Dongle (XIAO BLE central)
-
-```sh
-west build -d build/dongle -p -b xiao_ble -- \
-  -DSHIELD=leeloo_dongle
-```
-
----
-
-## 5) Flash order
-
-1. Flash **left** (peripheral build)
-2. Flash **right** (peripheral build)
-3. Flash **XIAO BLE** (dongle/central build)
-
----
-
-## 6) Pairing / bonds (do this early if anything is flaky)
-
-- If connections are weird, build/flash a **settings reset** firmware for each device as part of troubleshooting; ZMK explicitly recommends this flow for connection issues.[^2]
-- Remember: Bluetooth bond keys are stored on-device and can persist across reflashes, so clearing bonds can matter when you change roles/topology.[^5]
-
-**Settings reset build commands:**
-
-For nice!nano v2 (both halves):
-
-```sh
+```bash
+# nice!nano v2 (used for both left and right)
 west build -p -b nice_nano_v2 -- -DSHIELD=settings_reset
-```
 
-For XIAO BLE (dongle):
-
-```sh
+# XIAO BLE dongle
 west build -p -b xiao_ble -- -DSHIELD=settings_reset
 ```
 
----
+### Main Firmware
 
-## 7) Keymap in dongle mode (important workflow change)
+```bash
+# Left peripheral
+west build -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev2_left -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
 
-- The **keymap is effectively "applied" on the dongle**, because the split central is what runs keymap logic and turns events into HID for the host.[^1]
-- Your existing `config/leeloo.keymap` will be used by the dongle shield
-- Result: for most layout tweaks, you'll usually only need to **rebuild/reflash the dongle** (not both halves).
-- The peripheral halves will continue showing their nice!view displays with the new peripheral status widget
+# Right peripheral
+west build -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev2_right -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
 
----
+# Dongle central
+west build -p -b xiao_ble -- -DSHIELD=leeloo_dongle
+```
 
-## 8) Display behavior in dongle mode
+## Step 5: Keymap Changes
 
-- **Peripheral halves**: Will show normal display info plus a connection status icon indicating whether they're connected to the dongle
-- **Dongle**: XIAO BLE has no built-in display, so no display considerations needed
-- Your existing display configuration in `config/leeloo.conf` will continue working on the peripherals
-
----
-
-[^1]: [Split Keyboards | ZMK Firmware](https://zmk.dev/docs/features/split-keyboards) (27%)
-
-[^2]: [Troubleshooting wireless connection issues of ZMK devices.](https://zmk.dev/docs/troubleshooting/connection-issues) (26%)
-
-[^3]: [Keyboard Dongle](https://zmk.dev/docs/development/hardware-integration/dongle) (16%)
-
-[^4]: [zmk/app/src/display/widgets/Kconfig at main · zmkfirmware/zmk](https://github.com/zmkfirmware/zmk/blob/main/app/src/display/widgets/Kconfig) (12%)
-
-[^5]: [Bluetooth Behavior](https://zmk.dev/docs/keymaps/behaviors/bluetooth) (11%)
-
-[^6]: [Split Configuration | ZMK Firmware](https://zmk.dev/docs/config/split) (8%)
+- **Keymap changes:** Only need to reflash the dongle
