@@ -1,11 +1,11 @@
 manifest:
   remotes:
-    - name: clicketysplit
-      url-base: https://github.com/ClicketySplit
+    - name: zmkfirmware
+      url-base: https://github.com/zmkfirmware
   projects:
     - name: zmk
-      remote: clicketysplit
-      revision: clickety_split_series_zmk_v3.5_power_domains
+      remote: zmkfirmware
+      revision: main
       import: app/west.yml
   self:
     path: config
