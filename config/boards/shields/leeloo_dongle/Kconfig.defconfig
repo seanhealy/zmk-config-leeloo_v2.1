@@ -20,4 +20,8 @@ config BT_MAX_CONN
 config BT_MAX_PAIRED
   default 8
 
+# Disable display support since dongle has no display
+config ZMK_DISPLAY
+  default n
+
 endif
