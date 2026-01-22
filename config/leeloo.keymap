@@ -15,19 +15,19 @@
  * Assign the cs-gpios pin to 4.
  * Uncomment these next few lines if implementing nice!view Displays
  */
-nice_view_spi: &spi0 {
-    cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>;
-};
+
+nice_view_spi: &spi0 { cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>; };
 
 / {
-    conditional_layers {
-        compatible = "zmk,conditional-layers";
 
-        ble_layer {
-            if-layers = <1 2>;
-            then-layer = <3>;
-        };
-    };
+//    conditional_layers {
+//        compatible = "zmk,conditional-layers";
+//
+//        ble_layer {
+//            if-layers = <1 2>;
+//            then-layer = <3>;
+//        };
+//    };
 
     combos { compatible = "zmk,combos"; };
 
@@ -37,22 +37,22 @@ nice_view_spi: &spi0 {
         default_layer {
             display-name = " Base";
             bindings = <
-&kp GRAVE  &kp N1  &kp N2  &kp N3    &kp N4     &kp N5                                          &kp N6               &kp N7     &kp N8         &kp N9   &kp N0    &kp MINUS
-&kp TAB    &kp Q   &kp W   &kp E     &kp R      &kp T                                           &kp Y                &kp U      &kp I          &kp O    &kp P     &kp BACKSLASH
-&kp CAPS   &kp A   &kp S   &kp D     &kp F      &kp G                                           &kp H                &kp J      &kp K          &kp L    &kp SEMI  &kp SQT
-&kp LSHFT  &kp Z   &kp X   &kp C     &kp V      &kp B               &kp ESC      &kp BACKSPACE  &kp N                &kp M      &kp COMMA      &kp DOT  &kp FSLH  &kp RSHFT
-                           &kp LALT  &kp LCTRL  &lt 1 LEFT_BRACKET  &lt 2 SPACE  &lt 2 RETURN   &lt 1 RIGHT_BRACKET  &kp RCTRL  &kp RIGHT_ALT
+&kp GRAVE  &kp N1  &kp N2  &kp N3    &kp N4     &kp N5                                        &kp N6               &kp N7     &kp N8         &kp N9   &kp N0    &kp MINUS
+&kp TAB    &kp Q   &kp W   &kp E     &kp R      &kp T                                         &kp Y                &kp U      &kp I          &kp O    &kp P     &kp BACKSLASH
+&kp CAPS   &kp A   &kp S   &kp D     &kp F      &kp G                                         &kp H                &kp J      &kp K          &kp L    &kp SEMI  &kp SQT
+&kp LSHFT  &kp Z   &kp X   &kp C     &kp V      &lt 3 B             &kp ESC    &kp BACKSPACE  &lt 3 N              &kp M      &kp COMMA      &kp DOT  &kp FSLH  &kp RSHFT
+                           &kp LALT  &kp LCTRL  &lt 1 LEFT_BRACKET  &kp SPACE  &kp RET        &lt 1 RIGHT_BRACKET  &kp RCTRL  &kp RIGHT_ALT
             >;
         };
 
         raise_layer {
             display-name = " Raise";
             bindings = <
-&trans  &kp F1    &kp F2    &kp F3     &kp F4         &kp F5                        &kp F6  &kp F7  &kp F8  &kp F9  &kp F10  &kp EQUAL
-&trans  &trans    &kp UP    &trans     &kp PAGE_UP    &trans                        &trans  &trans  &trans  &trans  &trans   &trans
-&trans  &kp LEFT  &kp DOWN  &kp RIGHT  &kp PAGE_DOWN  &trans                        &trans  &trans  &trans  &trans  &trans   &trans
-&trans  &trans    &trans    &trans     &trans         &trans  &kp LGUI  &kp DELETE  &trans  &trans  &trans  &trans  &trans   &trans
-                            &trans     &trans         &trans  &trans    &trans      &trans  &trans  &trans
+&trans  &kp F1    &kp F2    &kp F3     &kp F4         &kp F5                         &kp F6  &kp F7    &kp F8  &kp F9  &kp F10  &kp EQUAL
+&trans  &trans    &kp UP    &trans     &kp PAGE_UP    &kp HOME                       &trans  &trans    &trans  &trans  &trans   &trans
+&trans  &kp LEFT  &kp DOWN  &kp RIGHT  &kp PAGE_DOWN  &kp END                        &trans  &trans    &trans  &trans  &trans   &trans
+&trans  &trans    &trans    &trans     &trans         &trans    &trans   &kp DELETE  &trans  &trans    &trans  &trans  &trans   &trans
+                            &trans     &kp LGUI       &trans    &kp RET  &kp SPACE   &trans  &kp RGUI  &trans
             >;
         };
 
