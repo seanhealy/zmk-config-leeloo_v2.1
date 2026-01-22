@@ -20,30 +20,4 @@ config BT_MAX_CONN
 config BT_MAX_PAIRED
   default 8
 
-# Disable display support since dongle has no display
-config ZMK_DISPLAY
-  default n
-
-# Disable all display-related features
-config ZMK_DISPLAY_STATUS_SCREEN_BUILT_IN
-  default n
-
-config ZMK_LV_FONT_DEFAULT_SMALL_MONTSERRAT_26
-  default n
-
-config LV_FONT_DEFAULT_MONTSERRAT_26
-  default n
-
-config ZMK_WIDGET_LAYER_STATUS
-  default n
-
-config ZMK_WIDGET_BATTERY_STATUS
-  default n
-
-config ZMK_WIDGET_OUTPUT_STATUS
-  default n
-
-config ZMK_WIDGET_WPM_STATUS
-  default n
-
 endif
