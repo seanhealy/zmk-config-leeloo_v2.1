@@ -151,31 +151,6 @@ Connect dongle to computer. Should auto-pair with both halves and allow typing.
 
 ---
 
-## Step 4: Manual Build Commands (If Needed)
-
-### Settings Reset
-
-```bash
-# nice!nano v2 (used for both left and right)
-west build -p -b nice_nano_v2 -- -DSHIELD=settings_reset
-
-# XIAO BLE dongle
-west build -p -b xiao_ble -- -DSHIELD=settings_reset
-```
-
-### Main Firmware
-
-```bash
-# Left peripheral
-west build -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev2_left -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
-
-# Right peripheral
-west build -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev2_right -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
-
-# Dongle central
-west build -p -b xiao_ble -- -DSHIELD=leeloo_dongle
-```
-
-## Step 5: Keymap Changes
+## Step 4: Keymap Changes
 
 - **Keymap changes:** Only need to reflash the dongle
