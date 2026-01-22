@@ -105,6 +105,48 @@ west build -d build/left -p -b nice_nano_v2 -- -DSHIELD="leeloo_rev2_left nice_v
 west build -d build/right -p -b nice_nano_v2 -- -DSHIELD="leeloo_rev2_right nice_view_adapter nice_view" -DZMK_CONFIG="/workspaces/zmk-config/[yourName]/leeloo_v2/config"
 ```
 
+# Dongle Support (Wireless USB Receiver)
+
+This configuration includes support for using a Seeed Studio XIAO nRF52840 as a wireless USB dongle. The dongle acts as a central BLE device that receives input from both keyboard halves and forwards it to your computer via USB.
+
+## Benefits of Using a Dongle
+
+* **Single USB Connection**: Connect only the dongle to your computer, not the keyboard halves
+* **Battery-Powered Keyboard**: Both keyboard halves run on batteries and don't need USB cables
+* **Reduced Latency**: Direct BLE connection to a dedicated receiver
+* **Cleaner Desk Setup**: No cables running to the keyboard
+
+## Hardware Required
+
+* Seeed Studio XIAO nRF52840 board (for the dongle)
+* Two nice!nano v2 boards (for left and right keyboard halves - standard setup)
+
+## Building Dongle Firmware
+
+The dongle firmware is automatically built by GitHub Actions along with the keyboard firmware. The build artifacts will include:
+
+* `leeloo_rev2_left-nice_nano_v2-*.uf2` - Left keyboard half firmware
+* `leeloo_rev2_right-nice_nano_v2-*.uf2` - Right keyboard half firmware  
+* `leeloo_rev2_left-seeed_xiao_ble-*.uf2` - Dongle firmware
+
+To build locally:
+```
+west build -d build/dongle -p -b seeed_xiao_ble -- -DSHIELD=leeloo_rev2_left -DZMK_CONFIG="path/to/config"
+```
+
+## Flashing and Setup
+
+1. **Flash the dongle**: Put the XIAO nRF52840 into bootloader mode and copy the dongle firmware file to it
+2. **Flash both keyboard halves**: Flash the standard left and right firmware to your nice!nano boards
+3. **Pairing**: The keyboard halves will automatically pair with the dongle when powered on
+4. **USB Connection**: Connect the dongle to your computer via USB
+
+## Configuration Files
+
+* `config/seeed_xiao_ble.conf` - Dongle-specific configuration (central role, USB enabled)
+* `config/leeloo.conf` - Shared keyboard configuration (applies to both halves and dongle)
+* `build.yaml` - Includes the dongle build target
+
 # Support
 If you have any questions with regards to Leeloo, please [Contact Us](https://clicketysplit.ca/pages/contact-us).
 
