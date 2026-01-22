@@ -16,7 +16,13 @@
  * Uncomment these next few lines if implementing nice!view Displays
  */
 
+#ifdef CONFIG_SHIELD_LEELOO_LEFT
 nice_view_spi: &spi0 { cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>; };
+#endif
+
+#ifdef CONFIG_SHIELD_LEELOO_RIGHT
+nice_view_spi: &spi0 { cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>; };
+#endif
 
 / {
 
