@@ -1,7 +1,7 @@
 # Leeloo Dongle Setup Plan
 
 Reference:
-https://zmk.dev/docs/development/hardware-integration/dongle?studio-ready=studio
+https://v0-3-branch.zmk.dev/docs/development/hardware-integration/dongle
 
 ## Overview
 
@@ -102,14 +102,14 @@ include:
    - board: xiao_ble
      shield: leeloo_dongle
 
-   # Left half (peripheral)
+   # Left half (peripheral) with nice!view
    - board: nice_nano_v2
-     shield: leeloo_rev2_left
+     shield: leeloo_rev2_left nice_view_adapter nice_view
      cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
 
-   # Right half (peripheral)
+   # Right half (peripheral) with nice!view
    - board: nice_nano_v2
-     shield: leeloo_rev2_right
+     shield: leeloo_rev2_right nice_view_adapter nice_view
      cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
 
    # Settings reset firmwares
@@ -137,9 +137,9 @@ For each device:
 
 ### 3b. Flash New Firmware
 
-**Left half:** Double-tap reset → drag `leeloo_rev2_left-nice_nano_v2-zmk.uf2` to `NICENANO` left.
+**Left half:** Double-tap reset → drag `leeloo_rev2_left_nice_view_adapter_nice_view-nice_nano_v2-zmk.uf2` to `NICENANO` left.
 
-**Right half:** Double-tap reset → drag `leeloo_rev2_right-nice_nano_v2-zmk.uf2` to `NICENANO` right.
+**Right half:** Double-tap reset → drag `leeloo_rev2_right_nice_view_adapter_nice_view-nice_nano_v2-zmk.uf2` to `NICENANO` right.
 
 **Dongle:** Double-tap reset → drag `leeloo_dongle-xiao_ble-zmk.uf2` to `XIAO-SENSE`
 
