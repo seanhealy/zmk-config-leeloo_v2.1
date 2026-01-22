@@ -8,14 +8,14 @@
 
 / {
     chosen {
-        zmk,kscan = &kscan_mock;
+        zmk,kscan = &mock_kscan;
         zmk,matrix-transform = &default_transform;
     };
 
-    kscan_mock: kscan_mock {
+    mock_kscan: mock_kscan_0 {
         compatible = "zmk,kscan-mock";
-        columns = <12>;
-        rows = <5>;
+        columns = <0>;
+        rows = <0>;
         events = <0>;
     };
 
