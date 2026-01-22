@@ -9,7 +9,13 @@
         compatible = "zmk,keymap";
 
         default_layer {
-            bindings = <>;
+            bindings = <
+                &none &none &none &none &none &none &none &none &none &none &none &none
+                &none &none &none &none &none &none &none &none &none &none &none &none
+                &none &none &none &none &none &none &none &none &none &none &none &none
+                &none &none &none &none &none &none &none &none &none &none &none &none &none &none &none &none
+                              &none &none &none &none &none &none &none &none
+            >;
         };
     };
 };
