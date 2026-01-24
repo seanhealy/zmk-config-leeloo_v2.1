@@ -13,9 +13,23 @@
 #
 ---
 include:
+   # Dongle (Central)
+   - board: seeeduino_xiao_ble
+     shield: leeloo_rev2_dongle_xiao
+     cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME="Leeloo Dongle"
+
+   # Left Half (now Peripheral)
    - board: nice_nano_v2
      shield: leeloo_rev2_left nice_view_adapter nice_view
+     cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+
+   # Right Half (now Peripheral)
    - board: nice_nano_v2
      shield: leeloo_rev2_right nice_view_adapter nice_view
+     cmake-args: -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+
+   # Settings Reset (required for transitioning)
    - board: nice_nano_v2
+     shield: settings_reset
+   - board: seeeduino_xiao_ble
      shield: settings_reset
