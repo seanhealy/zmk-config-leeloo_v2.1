@@ -1,4 +1,11 @@
-# Leeloo v2.1 ZMK Configuration
+# Clickety Split | Leeloo v2.1
+
+![Leeloo v2.1](https://github.com/ClicketySplit/build-guides/blob/main/leeloo/images/gallery/Leeloo-v2-ZMK.jpg)
+
+Keyboard Designer: [clicketysplit.ca](https://clicketysplit.ca) \
+GitHub: [ClicketySplit](https://github.com/ClicketySplit)
+
+## Leeloo v2.1 ZMK Configuration
 
 ![Leeloo v2.1](https://github.com/ClicketySplit/build-guides/blob/main/leeloo/images/gallery/Leeloo-v2-ZMK.jpg)
 
@@ -15,11 +22,7 @@ This is a complete ZMK configuration for the Leeloo v2.1 split keyboard that sup
 
 ## Quick Start
 
-### 1. Fork This Repository
-
-Click "Fork" on GitHub and enable GitHub Actions in your fork.
-
-### 2. Choose Your Connection Mode
+### 1. Choose Your Connection Mode
 
 **🔵 For Direct Bluetooth (BLE):**
 
@@ -34,7 +37,7 @@ Click "Fork" on GitHub and enable GitHub Actions in your fork.
 - Better battery life, more reliable connection
 - Easy switching between multiple computers
 
-### 3. Get Your Firmware
+### 2. Get Your Firmware
 
 GitHub Actions automatically builds firmware when you push changes. Download from the "Actions" tab:
 
@@ -49,7 +52,7 @@ GitHub Actions automatically builds firmware when you push changes. Download fro
 - `dongle_leeloo_left_peripheral-*.uf2` → Left half
 - `dongle_leeloo_right_peripheral-*.uf2` → Right half
 
-### 4. Flash Firmware
+### 3. Flash Firmware
 
 1. **Reset settings first** (recommended): Flash `settings_reset_*.uf2` to all devices
 2. **Flash the firmware**: Drag and drop the `.uf2` files to each device when in bootloader mode
@@ -59,9 +62,7 @@ GitHub Actions automatically builds firmware when you push changes. Download fro
 
 ### For Both Modes
 
-- 2x nice!nano v2 controllers
-- 2x nice!view displays (recommended)
-- Batteries for each half
+- Leeloo v2.1 hardware
 
 ### Additional for Dongle Mode
 
@@ -72,11 +73,6 @@ GitHub Actions automatically builds firmware when you push changes. Download fro
 
 Edit `config/leeloo_base.keymap` and push to GitHub. Your changes will automatically apply to both BLE and Dongle modes.
 
-Key files:
-
-- `config/leeloo.keymap` - Your keymap (shared between both modes)
-- `build.yaml` - Build configuration (don't change unless you know what you're doing)
-
 ## Features
 
 ### Leeloo v2.1 Hardware
@@ -86,8 +82,6 @@ Key files:
 - Socketed switches and rotary encoders
 - Native OLED/nice!view display support
 - Support for 110mAh, 600mAh, or 700mAh batteries
-- Per-switch RGB underglow support
-- ZMK v3.5 Power Domains (minimal battery drain)
 
 ### ZMK Firmware Features
 
@@ -95,7 +89,6 @@ Key files:
 - Rotary encoder support
 - RGB underglow (if installed)
 - Low power consumption
-- Real-time configuration with ZMK Studio
 
 ## Switching Between Modes
 

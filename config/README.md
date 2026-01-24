@@ -20,17 +20,7 @@ config/
 
 ### Main Keymap File
 
-Edit `leeloo.keymap` to customize your key bindings. This file is automatically used by both BLE and Dongle modes, ensuring consistency across connection methods.
-
-### nice!view Display Support
-
-The configuration automatically handles nice!view displays. The following line in the keymap enables SPI communication for the displays on keyboard halves (not needed for the dongle):
-
-```c
-#ifndef CONFIG_SHIELD_LEELOO_REV2_DONGLE_XIAO
-nice_view_spi: &spi0 { cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>; };
-#endif
-```
+Edit `leeloo_base.keymap` to customize your key bindings. This file is automatically used by both BLE and Dongle modes, ensuring consistency across connection methods.
 
 ## Advanced Configuration
 
