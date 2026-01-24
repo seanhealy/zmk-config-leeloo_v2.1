@@ -1,0 +1,28 @@
+# Copyright (c) 2023 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+if SHIELD_LEELOO_REV2_DONGLE_XIAO
+
+config ZMK_KEYBOARD_NAME
+    default "LeelooMultipass"
+
+config ZMK_SPLIT_ROLE_CENTRAL
+    default y
+
+config ZMK_SPLIT
+    default y
+
+# Set this to the number of peripherals your dongle will have.
+# For Leeloo split keyboard, this is 2 (left and right halves)
+config ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS
+    default 2
+
+# Set this to ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS + your desired number of BT profiles (default is 5)
+config BT_MAX_CONN
+    default 7
+
+# Set this to the same number as BT_MAX_CONN
+config BT_MAX_PAIRED
+    default 7
+
+endif

@@ -1,125 +1,90 @@
-# Clickety Split | Leeloo v2.1
+# Development and Advanced Configuration
 
-![Leeloo v2.1](https://github.com/ClicketySplit/build-guides/blob/main/leeloo/images/gallery/Leeloo-v2-ZMK.jpg)
+This directory contains the ZMK configuration files for the Leeloo v2.1 split keyboard.
 
-Keyboard Designer: [clicketysplit.ca](https://clicketysplit.ca) \
-GitHub: [ClicketySplit](https://github.com/ClicketySplit) \
-Hardware Supported: Elite-C, Elit-Pi, with OLED Displays; and, nice!nano v2 with OLED, or nice!view Displays
-
-Leeloo v2.1 has been designed from scratch—again. Everything from the wiring schematic to its case. Leeloo v2.1 still keeps the column stagger that it's known for, along with its low profile design.
-
-## Features/Differences from Leeloo v1, and v2
-
-- Support for Kailh Low Profile Choc switches with 18mm x 18mm spacing.
-  - A version for Kailh Box/MX switches with 19.05mm x 19.05mm spacing will be available in the future.
-- All switch locations are socketed.
-- Rotary encoder locations are socketed.
-  - One of two locations on each side can be used for a rotary encoder.
-- OLED Displays and nice!view Displays are natively supported, socketed, and no extra wiring is required.
-- Better location for 110mAh, 600,Ah, or 700mAh batteries.
-  - Different location for soldering battery leads.
-- Support for Alps Alpine Micro On/off switches.
-- Support for per-switch RGB underglow.
-  - Support for ZMK v3.5 Power Domains.
-  - Near zero battery leak while RGB LEDs are off.
-
-# Leeloo v1
-
-![Leeloo](https://github.com/ClicketySplit/build-guides/blob/main/leeloo/images/gallery/Leeloo-v1.jpg)
-
-## Features
-
-- 4x6x5m Split Keyboard
-- Support for both Low Profile Choc switches, and Box/MX switches; 19.05mm x 19.05mm spacing.
-- 90% of the switches are socketed; with the exception to the rotary encoder positions.
-- Support for Alps Alpine EC11 Rotary Encoders—one on each side, in one of three locations.
-- Support for OLED Displays or nice!view Displays.
-  - nice!view displays require a wire to be soldered from the CS Pin on nice!view display to P0.22 or D4 on the nice!nano.
-- Support for both 110mAh, 600mAh, or 700mAh batteries.
-- Solder pads for battery leads.
-- Support for Alps Alpine Micro On/off switches.
-
-# Building Leeloo's ZMK Firmware
-
-ZMK Firmware: [Introduction to ZMK](https://zmk.dev/docs/)
-Installation: [Installing ZMK](https://zmk.dev/docs/user-setup)
-Customization: [Customizing ZMK](https://zmk.dev/docs/customization)
-Development Environment: [Basic Setup](https://zmk.dev/docs/development/setup)
-
-Build commands for the default keymap of Leeloo v1:
+## File Structure
 
 ```
-west build -d build/left -p -b nice_nano_v2 -- -DSHIELD=leeloo_left
-west build -d build/right -p -b nice_nano_v2 -- -DSHIELD=leeloo_right
+config/
+├── leeloo.keymap              # Main keymap (shared between BLE and Dongle modes)
+├── leeloo.conf                # Basic keyboard configuration
+└── boards/shields/leeloo_rev2/
+    ├── Kconfig.shield         # Shield definitions
+    ├── Kconfig.defconfig      # Default configurations
+    ├── leeloo_rev2_dongle_xiao.overlay  # Dongle hardware mapping
+    ├── leeloo_rev2_dongle_xiao.conf     # Dongle-specific settings
+    └── leeloo_rev2_dongle_xiao.keymap   # Dongle keymap (includes main keymap)
 ```
 
-Build commands for the default keymap of Leeloo v2:
+## Keymap Customization
 
-```
-west build -d build/left_v2 -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev2_left
-west build -d build/right_v2 -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev2_right
-```
+### Main Keymap File
 
-Build commands for the default keymap of Leeloo v2.1:
+Edit `leeloo_base.keymap` to customize your key bindings. This file is automatically used by both BLE and Dongle modes, ensuring consistency across connection methods.
 
-```
-west build -d build/left_v2.1 -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev3_left
-west build -d build/right_v2.1 -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev3_right
-```
+## Advanced Configuration
 
-Build commands for your custom keymap of Leeloo v2.1:
+### Dongle Mode Details
 
-```
-west build -d build/left_v2.1 -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev3_left -DZMK_CONFIG="C:/dev/zmk/[yourName]/leeloo_v2.1/config"
+The dongle implementation uses:
 
-west build -d build/right_v2.1 -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev3_right -DZMK_CONFIG="C:/dev/zmk/[yourName]/leeloo_v2.1/config"
-```
+- **Hardware**: Seeed XIAO BLE board
+- **Role**: Central device (connects both halves and routes to USB)
+- **Matrix**: Full 5×12 Leeloo matrix mapping
+- **Power**: Optimized for always-on USB operation
 
-## Building Leeloo's ZMK Firmware with nice!view Displays
+### BLE Mode Details
 
-There are a couple of files that need to be adjusted before the build commands can be run.
+- **Left Half**: Acts as central, connects to computer via Bluetooth
+- **Right Half**: Peripheral, connects to left half
+- **Profiles**: 5 Bluetooth profiles available for device switching
 
-### Edit the leeloo[_rev2 | _rev3].keymap File
+### Build Artifacts
 
-Near the top 3rd of the leeloo[_rev2 | _rev3].keymap file, locate the following code block:
+The build system generates clearly named firmware files:
 
-```
-//nice_view_spi: &spi0 {
-//  cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>;
-//};
-```
+**Dongle Mode:**
 
-Remove the forward slashes to resemble the following:
+- `dongle_leeloo_xiao-*.uf2` → XIAO BLE dongle
+- `dongle_leeloo_left_peripheral-*.uf2` → Left half (peripheral)
+- `dongle_leeloo_right_peripheral-*.uf2` → Right half (peripheral)
 
-```
-nice_view_spi: &spi0 {
-    cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>;
-};
-```
+**BLE Mode:**
 
-Save your changes and close the file.
+- `ble_leeloo_left_central-*.uf2` → Left half (central)
+- `ble_leeloo_right_peripheral-*.uf2` → Right half (peripheral)
 
-### Sample Build Commands for nice!view Displays
+### Power Management
 
-Build commands for the default keymap of Leeloo v1:
+#### Dongle Mode Benefits
 
-```
-west build -d build/left -p -b nice_nano_v2 -- -DSHIELD="leeloo_left nice_view_adapter nice_view"
+- Both keyboard halves run as peripherals (better battery life)
+- No need to maintain connection between halves and computer
+- USB power for dongle eliminates battery concerns
 
-west build -d build/right -p -b nice_nano_v2 -- -DSHIELD="leeloo_right nice_view_adapter nice_view"
-```
+#### BLE Mode Configuration
 
-Build commands for your custom keymap of Leeloo v2.1:
+- Optimized for direct Bluetooth connection
+- Automatic power management
+- Sleep modes for extended battery life
 
-```
-west build -d build/left_v2.1 -p -b nice_nano_v2 -- -DSHIELD="leeloo_rev3_left nice_view_adapter nice_view" -DZMK_CONFIG="/workspaces/zmk-config/[yourName]/leeloo_v2.1/config"
+## Development Setup
 
-west build -d build/right_v2.1 -p -b nice_nano_v2 -- -DSHIELD="leeloo_rev3_right nice_view_adapter nice_view" -DZMK_CONFIG="/workspaces/zmk-config/[yourName]/leeloo_v2.1/config"
-```
+### Local Development
 
-# Support
+If you want to build locally instead of using GitHub Actions:
 
-If you have any questions with regards to Leeloo, please [Contact Us](https://clicketysplit.ca/pages/contact-us).
+1. Install ZMK development environment: [ZMK Setup Guide](https://zmk.dev/docs/development/setup)
 
-Clickety Split
-For the love of split keyboards.
+2. Build commands:
+
+   ```bash
+   # For Dongle Mode
+   west build -d build/dongle -b seeeduino_xiao_ble -- -DSHIELD=leeloo_rev2_dongle_xiao
+   west build -d build/left_p -b nice_nano_v2 -- -DSHIELD="leeloo_rev2_left nice_view_adapter nice_view" -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+   west build -d build/right_p -b nice_nano_v2 -- -DSHIELD="leeloo_rev2_right nice_view_adapter nice_view" -DCONFIG_ZMK_SPLIT=y -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=n
+
+   # For BLE Mode
+   west build -d build/left_c -b nice_nano_v2 -- -DSHIELD="leeloo_rev2_left nice_view_adapter nice_view"
+   west build -d build/right_p -b nice_nano_v2 -- -DSHIELD="leeloo_rev2_right nice_view_adapter nice_view"
+   ```

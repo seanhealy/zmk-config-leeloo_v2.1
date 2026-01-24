@@ -1,0 +1,5 @@
+# Copyright (c) 2023 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+config SHIELD_LEELOO_REV2_DONGLE_XIAO
+    def_bool $(shields_list_contains,leeloo_rev2_dongle_xiao)

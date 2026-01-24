@@ -1,0 +1,23 @@
+/*
+ * Copyright (c) 2023 The ZMK Contributors
+ * SPDX-License-Identifier: MIT
+ */
+
+/*
+ * Leeloo Rev2 Dongle Keymap
+ *
+ * This keymap is used by the XIAO BLE dongle to interpret key events
+ * received from the peripheral keyboard halves.
+ *
+ * The key bindings are imported from the shared leeloo_base.keymap file
+ * to ensure consistency with the main keyboard configuration.
+ *
+ * To modify key bindings, edit config/leeloo_base.keymap - changes will
+ * automatically apply to both direct BT mode and dongle mode.
+ */
+
+/*
+ * Include the base keymap that contains all key bindings.
+ * This ensures consistency between direct BT mode and dongle mode.
+ */
+#include "../../../leeloo_base.keymap"

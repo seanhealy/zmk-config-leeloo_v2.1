@@ -1,0 +1,7 @@
+[submodule "references/example"]
+	path = references/example
+	url = https://github.com/mctechnology17/zmk-config.git
+[submodule "references/zmk"]
+	path = references/zmk
+	url = https://github.com/zmkfirmware/zmk.git
+	branch = v0.3-branch

@@ -1,112 +1,123 @@
-# Clickety Split | Leeloo v2
+# Clickety Split | Leeloo v2.1
 
-![Leeloo v2](https://github.com/ClicketySplit/build-guides/blob/main/leeloo/images/gallery/Leeloo-v2-ZMK.jpg)
+![Leeloo v2.1](https://github.com/ClicketySplit/build-guides/blob/main/leeloo/images/gallery/Leeloo-v2-ZMK.jpg)
 
-Keyboard Designer: [clicketysplit.ca](https://clicketysplit.ca)
+Keyboard Designer: [clicketysplit.ca](https://clicketysplit.ca) \
 GitHub: [ClicketySplit](https://github.com/ClicketySplit)
-Hardware Supported: Pro Micro, Elite-C, and nice!nano v2
 
-Leeloo v2 has been designed from scratch—again.  Everything from the wiring schematic to its case.  Leeloo v2 still keeps the column stagger that it's known for, along with its low profile design.
+## Leeloo v2.1 ZMK Configuration
 
-## Features/Differences from Leeloo v1
-* Support for Kailh Low Profile Choc switches with 18mm x 18mm spacing.
-  - A version for Kailh Box/MX switches with 19.05mm x 19.05mm spacing will be available in the future.
-* All switch locations are socketed.
-* Rotary encoder locations are socketed.
-  - One of two locations on each side can be used for a rotary encoder.
-* OLED Displays and nice!view Displays are natively supported, socketed, and no extra wiring is required.
-* Support for per-switch RGB underglow.
-* Better location for 110mAh or 700mAh batteries.
-  - Different location for soldering battery leads.
-* Support for Alps Alpine Micro On/off switches.
+![Leeloo v2.1](https://github.com/ClicketySplit/build-guides/blob/main/leeloo/images/gallery/Leeloo-v2-ZMK.jpg)
 
-# Leeloo v1
+**Keyboard Designer**: [clicketysplit.ca](https://clicketysplit.ca)  
+**GitHub**: [ClicketySplit](https://github.com/ClicketySplit)  
+**Hardware Supported**: nice!nano v2 with OLED/nice!view displays
 
-![Leeloo](https://github.com/ClicketySplit/build-guides/blob/main/leeloo/images/gallery/Leeloo-v1.jpg)
+## What's This Repository?
 
-## Features 
-* 4x6x5m Split Keyboard
-* Support for both Low Profile Choc switches, and Box/MX switches; 19.05mm x 19.05mm spacing.
-* 90% of the switches are socketed; with the exception to the rotary encoder positions.
-* Support for Alps Alpine EC11 Rotary Encoders—one on each side, in one of three locations.
-* Support for OLED Displays or nice!view Displays.
-  - nice!view displays require a wire to be soldered from the CS Pin on nice!view display to P0.22 or D4 on the nice!nano.
-* Support for both 110mAh or 700mAh batteries.
-* Solder pads for battery leads.
-* Support for Alps Alpine Micro On/off switches.
+This is a complete ZMK configuration for the Leeloo v2.1 split keyboard that supports **two connection modes**:
 
-# Building Leeloo's ZMK Firmware
-ZMK Firmware: [Introduction to ZMK](https://zmk.dev/docs/)
-Installation: [Installing ZMK](https://zmk.dev/docs/user-setup)
-Customization: [Customizing ZMK](https://zmk.dev/docs/customization)
-Development Environment: [Basic Setup](https://zmk.dev/docs/development/setup)
+1. **🔵 Direct Bluetooth (BLE)** - Traditional wireless split keyboard
+2. **🔌 USB Dongle Mode** - Use a USB dongle for wired connection with wireless halves
 
-Build commands for the default keymap of Leeloo v1:
-```
-west build -d build/left -p -b nice_nano_v2 -- -DSHIELD=leeloo_left
-west build -d build/right -p -b nice_nano_v2 -- -DSHIELD=leeloo_right
-```
+## Quick Start
 
-Build commands for the default keymap of Leeloo v2:
-```
-west build -d build/left_v2 -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev2_left
-west build -d build/right_v2 -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev2_right
-```
+### 1. Choose Your Connection Mode
 
-Build commands for your custom keymap of Leeloo v1:
-```
-west build -d build/right -p -b nice_nano_v2 -- -DSHIELD=leeloo_right -DZMK_CONFIG="C:/dev/zmk/[yourName]/leeloo/config"
-west build -d build/left -p -b nice_nano_v2 -- -DSHIELD=leeloo_left -DZMK_CONFIG="C:/dev/zmk/[yourName]/leeloo/config"
-```
+**🔵 For Direct Bluetooth (BLE):**
 
-Build commands for your custom keymap of Leeloo v2:
-```
-west build -d build/right_v2 -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev2_right -DZMK_CONFIG="C:/dev/zmk/[yourName]/leeloo_v2/config"
-west build -d build/left_v2 -p -b nice_nano_v2 -- -DSHIELD=leeloo_rev2_left -DZMK_CONFIG="C:/dev/zmk/[yourName]/leeloo_v2/config"
-```
+- Connect each half directly to your computer via Bluetooth
+- Better for single-device use
+- Standard split keyboard experience
 
-## Building Leeloo's ZMK Firmware with nice!view Displays
-There are a couple of files that need to be adjusted before the build commands can be run.
+**🔌 For USB Dongle Mode:**
 
-### Edit the leeloo[_rev2].keymap File
-Near the top 3rd of the leeloo[_rev2].keymap file, locate the following code block:
+- Both halves connect to a small USB dongle (XIAO BLE)
+- Dongle plugs into your computer via USB-C
+- Better battery life, more reliable connection
+- Easy switching between multiple computers
 
-```
-//nice_view_spi: &spi0 {
-//	cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>;
-//};
-```
+### 2. Get Your Firmware
 
-Remove the forward slashes to resemble the following:
-```
-nice_view_spi: &spi0 {
-	cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>;
-};
-```
+GitHub Actions automatically builds firmware when you push changes. Download from the "Actions" tab:
 
-Save your changes and close the file.
+**For BLE Mode:**
 
-### Sample Build Commands for nice!view Displays
-Build commands for the default keymap of Leeloo v1:
-```
-west build -d build/left -p -b nice_nano_v2 -- -DSHIELD="leeloo_left nice_view_adapter nice_view"
-west build -d build/right -p -b nice_nano_v2 -- -DSHIELD="leeloo_right nice_view_adapter nice_view"
-```
+- `ble_leeloo_left_central-*.uf2` → Left half (acts as central)
+- `ble_leeloo_right_peripheral-*.uf2` → Right half
 
-Build commands for the default keymap of Leeloo v2:
-```
-west build -d build/left_v2 -p -b nice_nano_v2 -- -DSHIELD="leeloo_rev2_left nice_view_adapter nice_view"
-west build -d build/right_v2 -p -b nice_nano_v2 -- -DSHIELD="leeloo_rev2_right nice_view_adapter nice_view"
-```
+**For Dongle Mode:**
 
-Build commands for your custom keymap of Leeloo v2:
-```
-west build -d build/left -p -b nice_nano_v2 -- -DSHIELD="leeloo_rev2_left nice_view_adapter nice_view" -DZMK_CONFIG="/workspaces/zmk-config/[yourName]/leeloo_v2/config"
-west build -d build/right -p -b nice_nano_v2 -- -DSHIELD="leeloo_rev2_right nice_view_adapter nice_view" -DZMK_CONFIG="/workspaces/zmk-config/[yourName]/leeloo_v2/config"
-```
+- `dongle_leeloo_xiao-*.uf2` → XIAO BLE dongle
+- `dongle_leeloo_left_peripheral-*.uf2` → Left half
+- `dongle_leeloo_right_peripheral-*.uf2` → Right half
 
-# Support
-If you have any questions with regards to Leeloo, please [Contact Us](https://clicketysplit.ca/pages/contact-us).
+### 3. Flash Firmware
 
-Clickety Split
-For the love of split keyboards.
+1. **Reset settings first** (recommended): Flash `settings_reset_*.uf2` to all devices
+2. **Flash the firmware**: Drag and drop the `.uf2` files to each device when in bootloader mode
+3. **Pair devices**: Reset all devices simultaneously to initiate pairing
+
+## Hardware Requirements
+
+### For Both Modes
+
+- Leeloo v2.1 hardware
+
+### Additional for Dongle Mode
+
+- 1x Seeed XIAO BLE board
+- USB-C cable
+
+## Customizing Your Keymap
+
+Edit `config/leeloo_base.keymap` and push to GitHub. Your changes will automatically apply to both BLE and Dongle modes.
+
+## Features
+
+### Leeloo v2.1 Hardware
+
+- 4×6 + 5 thumb keys per half (60 keys total)
+- Kailh Choc low-profile switches (18mm spacing)
+- Socketed switches and rotary encoders
+- Native OLED/nice!view display support
+- Support for 110mAh, 600mAh, or 700mAh batteries
+
+### ZMK Firmware Features
+
+- 5 Bluetooth profiles per device
+- Rotary encoder support
+- RGB underglow (if installed)
+- Low power consumption
+
+## Switching Between Modes
+
+You can switch between BLE and Dongle modes anytime:
+
+1. Flash `settings_reset_*.uf2` to all devices
+2. Flash the firmware for your desired mode
+3. Reset devices to initiate pairing
+
+## Troubleshooting
+
+### Connection Issues
+
+1. Flash settings reset to all devices
+2. Reset all devices simultaneously
+3. Re-flash firmware if needed
+
+### Build Issues
+
+- Check that your GitHub Actions are enabled
+- Verify syntax in `config/leeloo.keymap` if you made changes
+- Check the Actions tab for build errors
+
+## Support
+
+For hardware questions: [Contact Clickety Split](https://clicketysplit.ca/pages/contact-us)
+
+For ZMK firmware questions: [ZMK Documentation](https://zmk.dev/docs/)
+
+---
+
+**Clickety Split - For the love of split keyboards** ❤️
