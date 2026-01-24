@@ -16,7 +16,7 @@ include:
    # Dongle (Central)
    - board: seeeduino_xiao_ble
      shield: leeloo_rev2_dongle_xiao
-     cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Leeloo_Dongle\"
+     cmake-args: -DCONFIG_ZMK_KEYBOARD_NAME=\"Leeloo\ Dallas\ Multipass\"
 
    # Left Half (now Peripheral)
    - board: nice_nano_v2
