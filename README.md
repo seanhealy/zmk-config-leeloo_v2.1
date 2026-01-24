@@ -70,16 +70,7 @@ GitHub Actions automatically builds firmware when you push changes. Download fro
 
 ## Customizing Your Keymap
 
-### Easy Way: ZMK Studio (Recommended)
-
-1. Open [ZMK Studio](https://zmk.dev/zmk-studio/) in your browser
-2. Load your `.uf2` firmware file
-3. Make changes visually
-4. Apply changes directly to your keyboard
-
-### Advanced Way: Code Editing
-
-Edit `config/leeloo.keymap` and push to GitHub. Your changes will automatically apply to both BLE and Dongle modes.
+Edit `config/leeloo_base.keymap` and push to GitHub. Your changes will automatically apply to both BLE and Dongle modes.
 
 Key files:
 
@@ -127,14 +118,6 @@ You can switch between BLE and Dongle modes anytime:
 - Check that your GitHub Actions are enabled
 - Verify syntax in `config/leeloo.keymap` if you made changes
 - Check the Actions tab for build errors
-
-### Display Issues
-
-If nice!view displays aren't working, ensure this line is uncommented in your keymap:
-
-```c
-nice_view_spi: &spi0 { cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>; };
-```
 
 ## Support
 

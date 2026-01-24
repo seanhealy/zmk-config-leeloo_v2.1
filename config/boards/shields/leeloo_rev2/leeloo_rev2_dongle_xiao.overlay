@@ -37,7 +37,6 @@ RC(3,0) RC(3,1) RC(3,2) RC(3,3) RC(3,4) RC(3,5) RC(4,5) RC(4,6) RC(3,6) RC(3,7) 
         events = <0>;
     };
 
-    // Physical layout for ZMK Studio compatibility (basic version without key positions)
     physical_layout: physical_layout_0 {
         compatible = "zmk,physical-layout";
         display-name = "Default Layout";
