@@ -9,12 +9,15 @@
  * This keymap is used by the XIAO BLE dongle to interpret key events
  * received from the peripheral keyboard halves.
  *
- * Instead of duplicating the keymap, we include the main leeloo.keymap
- * file to ensure both the keyboard halves and dongle use identical
- * key mappings.
+ * The key bindings are imported from the shared leeloo_base.keymap file
+ * to ensure consistency with the main keyboard configuration.
  *
- * To modify key bindings, edit config/leeloo.keymap - changes will
+ * To modify key bindings, edit config/leeloo_base.keymap - changes will
  * automatically apply to both direct BT mode and dongle mode.
  */
 
-#include "../../../leeloo.keymap"
+/*
+ * Include the base keymap that contains all key bindings.
+ * This ensures consistency between direct BT mode and dongle mode.
+ */
+#include "../../../leeloo_base.keymap"
