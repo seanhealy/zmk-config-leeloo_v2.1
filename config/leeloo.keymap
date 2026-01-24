@@ -14,9 +14,13 @@
 /*
  * Assign the cs-gpios pin to 4.
  * Uncomment these next few lines if implementing nice!view Displays
+ * Note: This configuration only applies to keyboard halves with pro_micro pinout,
+ * not to the XIAO BLE dongle which has its own pinout.
  */
 
+#ifndef CONFIG_SHIELD_LEELOO_REV2_DONGLE_XIAO
 nice_view_spi: &spi0 { cs-gpios = <&pro_micro 4 GPIO_ACTIVE_HIGH>; };
+#endif
 
 / {
 
