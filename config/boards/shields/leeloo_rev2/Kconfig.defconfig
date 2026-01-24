@@ -4,7 +4,7 @@
 if SHIELD_LEELOO_REV2_DONGLE_XIAO
 
 config ZMK_KEYBOARD_NAME
-    default "Leeloo Dallas Multipass"
+    default "Leeloo Multipass"
 
 config ZMK_SPLIT_ROLE_CENTRAL
     default y
